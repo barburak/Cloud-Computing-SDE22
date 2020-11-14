@@ -12,16 +12,11 @@ data "exoscale_compute_template" "CCvmachine" {
   name = var.template
 }
 
-data "exoscale_compute_template" "CCpool" {
-  zone = var.zone
-  name = var.template
-}
-
 resource "exoscale_instance_pool" "CCinstancepool" {
   zone = var.zone
   name = "CCinstancepool"
   description = "Instance Pool - Managed by Terraform for Cloud Computing!"
-  template_id = data.exoscale_compute_template.CCpool.id
+  template_id = data.exoscale_compute_template.CCvmachine.id
   size = 2
   service_offering = "micro"
   disk_size = 10
@@ -39,8 +34,11 @@ sudo sh get-docker.sh
 sudo sh get-docker.sh
 
 # Run the http load generator
-sudo docker run -d --restart=always -p 80:8080 janoszen/http-load-generator:1.0.1
-
+docker run -d \
+  --restart=always \
+  -p 8080:8080 \
+  janoszen/http-load-generator:1.0.1
+  
 # Run node explorer
 sudo docker run -d -p 9100:9100 --net="host" --pid="host" -v "/:/host:ro,rslave" quay.io/prometheus/node-exporter --path.rootfs=/host
 EOF

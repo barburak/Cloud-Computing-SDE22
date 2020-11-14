@@ -18,7 +18,7 @@ resource "exoscale_nlb_service" "CCnlbservice" {
 
   healthcheck {
     mode = "http"
-    uri      = "/health"
+    uri = "/health"
     port = 8080
     interval = 5
     timeout = 3
