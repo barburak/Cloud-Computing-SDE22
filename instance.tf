@@ -1,23 +1,10 @@
-/* VM Instance Variables */
-variable "zone" {
-  default = "at-vie-1"
-}
-
-variable "template" {
-  default = "Linux Ubuntu 20.04 LTS 64-bit"
-}
-
-data "exoscale_compute_template" "CCvmachine" {
-  zone = var.zone
-  name = var.template
-}
-
+/* Instancepool with HTTP Load Generator */
 resource "exoscale_instance_pool" "CCinstancepool" {
   zone = var.zone
   name = "CCinstancepool"
   description = "Instance Pool - Managed by Terraform for Cloud Computing!"
-  template_id = data.exoscale_compute_template.CCvmachine.id
-  size = 2
+  template_id = data.exoscale_compute_template.CCvmubuntu.id
+  size = 1
   service_offering = "micro"
   disk_size = 10
   key_pair = exoscale_ssh_keypair.adminCC.name
@@ -31,25 +18,24 @@ apt update
 # region Install Docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
-sudo sh get-docker.sh
 
 # Run the http load generator
 docker run -d \
   --restart=always \
   -p 8080:8080 \
-  janoszen/http-load-generator:1.0.1
+  quay.io/janoszen/http-load-generator:1.0.1
   
-# Run node explorer
+# Run node exporter
 sudo docker run -d -p 9100:9100 --net="host" --pid="host" -v "/:/host:ro,rslave" quay.io/prometheus/node-exporter --path.rootfs=/host
 EOF
-
 }
 
-resource "exoscale_compute" "prometheusMonitor" {
+/* Instance for Monitoring with Prometheus, Visualized with Grafana */
+resource "exoscale_compute" "Monitoring" {
   zone = var.zone
-  display_name = "prometheusMonitor"
+  display_name = "Monitoring"
   size = "micro"
-  template_id = data.exoscale_compute_template.CCvmachine.id
+  template_id = data.exoscale_compute_template.CCvmubuntu.id
   disk_size = 10
   key_pair = exoscale_ssh_keypair.adminCC.name
   security_group_ids = [exoscale_security_group.sg.id]
@@ -98,5 +84,11 @@ sudo docker run -d \
 # Run prometheus
 sudo docker run -d -p 9090:9090 -v /srv/prometheus.yml:/etc/prometheus/prometheus.yml \
     -v /srv/service-discovery/:/srv/service-discovery/ prom/prometheus
+
+# Run Grafana
+sudo docker run -d \
+    -p 3000:3000 \
+    grafana/grafana
+
 EOF
 }
