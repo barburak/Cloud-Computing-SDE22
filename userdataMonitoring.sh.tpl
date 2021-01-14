@@ -110,8 +110,8 @@ notifiers:
 EOCF
 
 # Create shared directory for Grafana dashboard
-sudo mkdir -p /srv/grafana/dashboards/
-sudo chmod a+rwx /srv/grafana/dashboards/
+sudo mkdir -p /srv/grafana/provisioning/dashboards/
+sudo chmod a+rwx /srv/grafana/provisioning/dashboards/
 
 cat <<EOCF >/srv/grafana/provisioning/dashboards/dashboard.yaml
 apiVersion: 1
@@ -149,5 +149,6 @@ sudo docker run -d \
     --network monitoring \
     -v /srv/grafana/provisioning/datasources/grafana.yaml:/etc/grafana/provisioning/datasources/grafana.yaml \
     -v /srv/grafana/provisioning/notifiers/notifiers.yaml:/etc/grafana/provisioning/notifiers/notifiers.yaml \
-    -v /srv/grafana/dashboards:/etc/grafana/dashboards \
+    -v /srv/grafana/provisioning/dashboards/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml \
+    -v /srv/grafana/dashboards/dashobard.json:/etc/grafana/dashboards/dashobard.json \
     quay.io/grafana/grafana
