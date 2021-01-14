@@ -9,25 +9,7 @@ resource "exoscale_instance_pool" "CCinstancepool" {
   disk_size = 10
   key_pair = exoscale_ssh_keypair.adminCC.name
   security_group_ids = [exoscale_security_group.sg.id]
-  user_data =<<EOF
-#!/bin/bash
-
-set -e
-apt update
-
-# region Install Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-# Run the http load generator
-docker run -d \
-  --restart=always \
-  -p 8080:8080 \
-  quay.io/janoszen/http-load-generator:1.0.1
-  
-# Run node exporter
-sudo docker run -d -p 9100:9100 --net="host" --pid="host" -v "/:/host:ro,rslave" quay.io/prometheus/node-exporter --path.rootfs=/host
-EOF
+  user_data =file("userdataPool.sh")
 }
 
 /* Instance for Monitoring with Prometheus, Visualized with Grafana */
