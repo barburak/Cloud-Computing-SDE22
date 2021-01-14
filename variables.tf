@@ -12,6 +12,13 @@ variable "zone" {
   default = "at-vie-1"
 }
 
+# source: Janos Pasztor, https://github.com/FH-Cloud-Computing/sprint-2/
+variable "exoscale_zone_id" {
+  type = string
+  description = "ID of the exoscale zone"
+  default = "4da1b188-dcd6-4ff5-b7fd-bde984055548"
+}
+
 variable "template" {
   default = "Linux Ubuntu 20.04 LTS 64-bit"
 }
