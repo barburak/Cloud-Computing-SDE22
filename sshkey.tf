@@ -1,4 +1,4 @@
 resource "exoscale_ssh_keypair" "adminCC" {
-  name       = "adminCC"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAhb2yUZ3gSVzlWI+u83LmgU7PcXsV9wXxfAjU0bO+1ZaGZ7pmsVrx4OnkiP77pA2ABRsuPXR/JNGXUv2iPYK1r9QwSaZEvgjkjhTwPxY7I2yHvan3BZs2u5xcZSbHgW4C5mMtL2d0Q9oQ7GLTvy9daZlSoxuXZ3Ud9ViuxLce8YdibLMMW3vImIZJ0CaXjEhr7SqJaWK+vKf4ZGisNROThACQA8wmXVs0RJhUQYnXe1pKaerm9K4q2a6zjHg+SbfwZh8nBpWDwvxn/3MIyPWtDOMmKQyygQq+bhCi29kLrRvI1R22S2YmS9+H7o1cPlUIbSa+kzPVHZjOO4r1BqYPrw== rsa-key-20201113"
+  name = "adminCC"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwP93CPibKpRvZA11VRAghhz0nWg0/D+u/GWbiSzTVBMwM3ujor4aWQPVq444/jVwCjIUONKKE2y5hU1yTS0Gk0ecbQ6MSlmJbuNFi+bNc2IU/TIzzNX0Rmn5EEX8ZK3Chz2JVchkjnUArXRre7dA5HvsDcpC4xmcbEIukC4GaqGGZGACYOjtTePX0FhPVz24a3H1d6C/FLs+nvOnXF1tbYbKqhlO0Q+tZG2qtJuTAqDrWjY8UUw1RQq51EmQbTfAEanSCCOqUct7Dje4pJNLQ2ohnY6kGDos2PkC3yRPKDeAd28q8tOfmtz+OOPpmf69ceg+n+edjY8hnF6x34Cxd"
 }

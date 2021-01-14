@@ -59,10 +59,8 @@ sudo chmod a+rwx /srv/grafana/provisioning/datasources/
 # Some code snippets from: https://grafana.com/docs/grafana/latest/administration/provisioning/
 # and from Janos Pasztor: https://fh-cloud-computing.github.io/exercises/5-grafana/
 cat <<EOCF >/srv/grafana/provisioning/datasources/grafana.yaml
-# config file version
 apiVersion: 1
 
-# list of datasources to insert/update depending what's available in the database
 datasources:
 - name: Prometheus
   type: prometheus
@@ -86,7 +84,7 @@ notifiers:
     is_default: false
     send_reminder: true
     disable_resolve_message: true
-    frequency: "2m"
+    frequency: "5m"
     settings:
       autoResolve: true
       httpMethod: "POST"
@@ -100,7 +98,7 @@ notifiers:
     is_default: false
     send_reminder: true
     disable_resolve_message: true
-    frequency: "2m"
+    frequency: "5m"
     settings:
       autoResolve: true
       httpMethod: "POST"
@@ -126,9 +124,25 @@ providers:
     path: /etc/grafana/dashboards
 EOCF
 
+# Create shared directory for Grafana dashboard
+sudo mkdir -p /srv/grafana/dashboards/
+sudo chmod a+rwx /srv/grafana/dashboards/
+
 cat <<EOCF >/srv/grafana/dashboards/dashboard.json
 ${dashboard}
 EOCF
+
+
+# Run Grafana
+sudo docker run -d \
+    -p 3000:3000 \
+    --name grafana \
+    --network monitoring \
+    -v /srv/grafana/provisioning/datasources/grafana.yaml:/etc/grafana/provisioning/datasources/grafana.yaml \
+    -v /srv/grafana/provisioning/notifiers/notifiers.yaml:/etc/grafana/provisioning/notifiers/notifiers.yaml \
+    -v /srv/grafana/provisioning/dashboards/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml \
+    -v /srv/grafana/dashboards/dashboard.json:/etc/grafana/dashboards/dashboard.json \
+    grafana/grafana
 
 # Run Autoscaler
 # Source: Janos Pasztor https://github.com/janoszen/exoscale-grafana-autoscaler
@@ -141,14 +155,3 @@ sudo docker run -d \
     --exoscale-api-secret ${exoscale_secret} \
     --exoscale-zone-id ${exoscale_zone_id} \
     --instance-pool-id ${instance_pool_id}
-
-# Run Grafana
-sudo docker run -d \
-    -p 3000:3000 \
-    --name grafana \
-    --network monitoring \
-    -v /srv/grafana/provisioning/datasources/grafana.yaml:/etc/grafana/provisioning/datasources/grafana.yaml \
-    -v /srv/grafana/provisioning/notifiers/notifiers.yaml:/etc/grafana/provisioning/notifiers/notifiers.yaml \
-    -v /srv/grafana/provisioning/dashboards/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml \
-    -v /srv/grafana/dashboards/dashobard.json:/etc/grafana/dashboards/dashobard.json \
-    quay.io/grafana/grafana
