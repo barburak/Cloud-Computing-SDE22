@@ -20,7 +20,7 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
-  - job_name: 'exoscale'
+  - job_name: 'service discovery'
     file_sd_configs:
       - files:
           - /srv/service-discovery/config.json
@@ -36,7 +36,7 @@ docker run \
     --name sd \
     --network monitoring \
     -v /srv/service-discovery:/var/run/prometheus-sd-exoscale-instance-pools \
-    janoszen/prometheus-sd-exoscale-instance-pools:1.0.0 \
+    quay.io/janoszen/prometheus-sd-exoscale-instance-pools:1.0.0 \
     --exoscale-api-key ${exoscale_key} \
     --exoscale-api-secret ${exoscale_secret} \
     --exoscale-zone-id ${exoscale_zone_id} \
@@ -49,7 +49,7 @@ docker run -d \
     --network monitoring \
     -v /srv/prometheus.yml:/etc/prometheus/prometheus.yml \
     -v /srv/service-discovery/:/srv/service-discovery/ \
-    prom/prometheus
+    quay.io/prometheus/prometheus
 
 # Create shared directory for Grafana config
 sudo mkdir -p /srv/grafana/provisioning/datasources/
@@ -58,7 +58,7 @@ sudo chmod a+rwx /srv/grafana/provisioning/datasources/
 # Write Grafana config
 # Some code snippets from: https://grafana.com/docs/grafana/latest/administration/provisioning/
 # and from Janos Pasztor: https://fh-cloud-computing.github.io/exercises/5-grafana/
-cat <<EOCF >/etc/grafana/provisioning/datasources/grafana.yaml
+cat <<EOCF >/srv/grafana/provisioning/datasources/grafana.yaml
 # config file version
 apiVersion: 1
 
@@ -77,7 +77,7 @@ EOCF
 sudo mkdir -p /srv/grafana/provisioning/notifiers/
 sudo chmod a+rwx /srv/grafana/provisioning/notifiers/
 
-cat <<EOCF >/etc/grafana/provisioning/notifiers/notifiers.yaml
+cat <<EOCF >/srv/grafana/provisioning/notifiers/notifiers.yaml
 notifiers:
   - name: Scale up
     type: webhook
@@ -134,14 +134,13 @@ EOCF
 # Source: Janos Pasztor https://github.com/janoszen/exoscale-grafana-autoscaler
 sudo docker run -d \
     -p 8090:8090 \
-    --netowork monitoring \
     --name autoscaler\
+    --netowork monitoring \
+    quay.io/janoszen/exoscale-grafana-autoscaler:1.0.2 \
     --exoscale-api-key ${exoscale_key} \
     --exoscale-api-secret ${exoscale_secret} \
     --exoscale-zone-id ${exoscale_zone_id} \
-    --instance-pool-id ${instance_pool_id} \
-    quay.io/janoszen/exoscale-grafana-autoscaler:1.0.2
-
+    --instance-pool-id ${instance_pool_id}
 
 # Run Grafana
 sudo docker run -d \
@@ -151,4 +150,4 @@ sudo docker run -d \
     -v /srv/grafana/provisioning/datasources/grafana.yaml:/etc/grafana/provisioning/datasources/grafana.yaml \
     -v /srv/grafana/provisioning/notifiers/notifiers.yaml:/etc/grafana/provisioning/notifiers/notifiers.yaml \
     -v /srv/grafana/dashboards:/etc/grafana/dashboards \
-    grafana/grafana
+    quay.io/grafana/grafana

@@ -23,7 +23,7 @@ resource "exoscale_security_group_rule" "http22SSH" {
 
 /* Security group for Prometheus & Grafana Stuff*/
 
-resource "exoscale_security_group_rule" "http9090" {
+resource "exoscale_security_group_rule" "http9090prometheus" {
   security_group_id = exoscale_security_group.sg.id
   type = "INGRESS"
   protocol = "tcp"
@@ -32,7 +32,7 @@ resource "exoscale_security_group_rule" "http9090" {
   end_port = 9090
 }
 
-resource "exoscale_security_group_rule" "nodeExporter9100" {
+resource "exoscale_security_group_rule" "http9100nodeExporter" {
   security_group_id = exoscale_security_group.sg.id
   type = "INGRESS"
   protocol = "tcp"
@@ -41,7 +41,7 @@ resource "exoscale_security_group_rule" "nodeExporter9100" {
   end_port = 9100
 }
 
-resource "exoscale_security_group_rule" "http3000" {
+resource "exoscale_security_group_rule" "http3000grafana" {
   security_group_id = exoscale_security_group.sg.id
   type = "INGRESS"
   protocol = "tcp"
@@ -50,7 +50,7 @@ resource "exoscale_security_group_rule" "http3000" {
   end_port = 3000
 }
 
-resource "exoscale_security_group_rule" "http8090" {
+resource "exoscale_security_group_rule" "http8090autoscaler" {
   security_group_id = exoscale_security_group.sg.id
   type = "INGRESS"
   protocol = "tcp"
