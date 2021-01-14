@@ -130,6 +130,19 @@ cat <<EOCF >/srv/grafana/dashboards/dashboard.json
 ${dashboard}
 EOCF
 
+# Run Autoscaler
+# Source: Janos Pasztor https://github.com/janoszen/exoscale-grafana-autoscaler
+sudo docker run -d \
+    -p 8090:8090 \
+    --netowork monitoring \
+    --name autoscaler\
+    --exoscale-api-key ${exoscale_key} \
+    --exoscale-api-secret ${exoscale_secret} \
+    --exoscale-zone-id ${exoscale_zone_id} \
+    --instance-pool-id ${instance_pool_id} \
+    quay.io/janoszen/exoscale-grafana-autoscaler:1.0.2
+
+
 # Run Grafana
 sudo docker run -d \
     -p 3000:3000 \
