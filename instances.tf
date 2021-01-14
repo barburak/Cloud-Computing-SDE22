@@ -28,5 +28,6 @@ resource "exoscale_compute" "Monitoring" {
     exoscale_secret=var.exoscale_secret
     exoscale_zone_id=var.exoscale_zone_id
     instance_pool_id=exoscale_instance_pool.CCinstancepool.id
+    dashboard = file("CCDashboard.json")
   })
 }

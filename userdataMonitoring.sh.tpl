@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# source: Janos Pasztor, https://github.com/FH-Cloud-Computing/sprint-2/
+# source code from sprint 2: Janos Pasztor, https://github.com/FH-Cloud-Computing/sprint-2/
 # Abort on all errors
 set -e
 
@@ -51,7 +51,91 @@ docker run -d \
     -v /srv/service-discovery/:/srv/service-discovery/ \
     prom/prometheus
 
+# Create shared directory for Grafana config
+sudo mkdir -p /srv/grafana/provisioning/datasources/
+sudo chmod a+rwx /srv/grafana/provisioning/datasources/
+
+# Write Grafana config
+# Some code snippets from: https://grafana.com/docs/grafana/latest/administration/provisioning/
+# and from Janos Pasztor: https://fh-cloud-computing.github.io/exercises/5-grafana/
+cat <<EOCF >/etc/grafana/provisioning/datasources/grafana.yaml
+# config file version
+apiVersion: 1
+
+# list of datasources to insert/update depending what's available in the database
+datasources:
+- name: Prometheus
+  type: prometheus
+  access: proxy
+  orgId: 1
+  url: http://prometheus:9090
+  version: 1
+  editable: false
+EOCF
+
+# Create shared directory for Grafana notification channels
+sudo mkdir -p /srv/grafana/provisioning/notifiers/
+sudo chmod a+rwx /srv/grafana/provisioning/notifiers/
+
+cat <<EOCF >/etc/grafana/provisioning/notifiers/notifiers.yaml
+notifiers:
+  - name: Scale up
+    type: webhook
+    uid: buVeHZfMk
+    org_id: 1
+    is_default: false
+    send_reminder: true
+    disable_resolve_message: true
+    frequency: "2m"
+    settings:
+      autoResolve: true
+      httpMethod: "POST"
+      severity: "critical"
+      uploadImage: false
+      url: "http://autoscaler:8090/up"
+  - name: Scale down
+    type: webhook
+    uid: ECpRDZfMk
+    org_id: 1
+    is_default: false
+    send_reminder: true
+    disable_resolve_message: true
+    frequency: "2m"
+    settings:
+      autoResolve: true
+      httpMethod: "POST"
+      severity: "critical"
+      uploadImage: false
+      url: "http://autoscaler:8090/down"
+EOCF
+
+# Create shared directory for Grafana dashboard
+sudo mkdir -p /srv/grafana/dashboards/
+sudo chmod a+rwx /srv/grafana/dashboards/
+
+cat <<EOCF >/srv/grafana/provisioning/dashboards/dashboard.yaml
+apiVersion: 1
+
+providers:
+- name: 'Home'
+  orgId: 1
+  folder: ''
+  type: file
+  updateIntervalSeconds: 10
+  options:
+    path: /etc/grafana/dashboards
+EOCF
+
+cat <<EOCF >/srv/grafana/dashboards/dashboard.json
+${dashboard}
+EOCF
+
 # Run Grafana
 sudo docker run -d \
     -p 3000:3000 \
+    --name grafana \
+    --network monitoring \
+    -v /srv/grafana/provisioning/datasources/grafana.yaml:/etc/grafana/provisioning/datasources/grafana.yaml \
+    -v /srv/grafana/provisioning/notifiers/notifiers.yaml:/etc/grafana/provisioning/notifiers/notifiers.yaml \
+    -v /srv/grafana/dashboards:/etc/grafana/dashboards \
     grafana/grafana
