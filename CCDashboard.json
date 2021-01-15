@@ -35,7 +35,7 @@
             "query": {
               "params": [
                 "A",
-                "5m",
+                "1m",
                 "now"
               ]
             },
@@ -47,7 +47,7 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "5m",
+        "for": "1m",
         "frequency": "1m",
         "handler": 1,
         "name": "CPU Usage alert 0.80",
@@ -180,7 +180,7 @@
             "query": {
               "params": [
                 "A",
-                "5m",
+                "1m",
                 "now"
               ]
             },
@@ -192,7 +192,7 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "5m",
+        "for": "1m",
         "frequency": "1m",
         "handler": 1,
         "name": "CPU Usage alert 0.20",
