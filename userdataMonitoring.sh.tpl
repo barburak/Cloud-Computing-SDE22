@@ -149,7 +149,7 @@ sudo docker run -d \
 sudo docker run -d \
     -p 8090:8090 \
     --name autoscaler\
-    --netowork monitoring \
+    --network monitoring \
     quay.io/janoszen/exoscale-grafana-autoscaler:1.0.2 \
     --exoscale-api-key ${exoscale_key} \
     --exoscale-api-secret ${exoscale_secret} \
