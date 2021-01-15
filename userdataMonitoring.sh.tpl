@@ -79,7 +79,7 @@ cat <<EOCF >/srv/grafana/provisioning/notifiers/notifiers.yaml
 notifiers:
   - name: Scale up
     type: webhook
-    uid: buVeHZfMk
+    uid: ECpRDZfMk
     org_id: 1
     is_default: false
     send_reminder: true
@@ -93,7 +93,7 @@ notifiers:
       url: "http://autoscaler:8090/up"
   - name: Scale down
     type: webhook
-    uid: ECpRDZfMk
+    uid: buVeHZfMk
     org_id: 1
     is_default: false
     send_reminder: true

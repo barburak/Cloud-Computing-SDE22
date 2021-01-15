@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -35,7 +35,7 @@
             "query": {
               "params": [
                 "A",
-                "1m",
+                "5m",
                 "now"
               ]
             },
@@ -50,51 +50,29 @@
         "for": "5m",
         "frequency": "1m",
         "handler": 1,
-        "message": "Scale up!",
-        "name": "Average CPU Usage alert",
+        "name": "CPU Usage alert 0.80",
         "noDataState": "no_data",
         "notifications": [
           {
-            "uid": "buVeHZfMk"
+            "uid": "ECpRDZfMk"
           }
         ]
       },
-      "aliasColors": {
-        "194.182.184.206:9100": "purple",
-        "A: 194.182.184.206:9100": "blue",
-        "B: 194.182.184.206:9100": "red"
-      },
+      "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {
-            "align": null,
-            "filterable": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "custom": {}
         },
         "overrides": []
       },
-      "fill": 2,
-      "fillGradient": 10,
+      "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
-        "h": 12,
+        "h": 9,
         "w": 12,
         "x": 0,
         "y": 0
@@ -112,7 +90,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "connected",
+      "nullPointMode": "null",
       "options": {
         "alertThreshold": true
       },
@@ -128,11 +106,9 @@
       "targets": [
         {
           "expr": "sum by (instance) (rate(node_cpu_seconds_total{mode!=\"idle\"}[1m])) / sum by (instance) (rate(node_cpu_seconds_total[1m]))",
-          "format": "time_series",
-          "instant": false,
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{ instance }}",
+          "queryType": "randomWalk",
           "refId": "A"
         }
       ],
@@ -148,7 +124,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average CPU Usage",
+      "title": "CPU Usage 0.80 alert",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -164,8 +140,7 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:212",
-          "decimals": 1,
+          "$$hashKey": "object:143",
           "format": "percentunit",
           "label": null,
           "logBase": 1,
@@ -174,7 +149,7 @@
           "show": true
         },
         {
-          "$$hashKey": "object:213",
+          "$$hashKey": "object:144",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -205,7 +180,7 @@
             "query": {
               "params": [
                 "A",
-                "1m",
+                "5m",
                 "now"
               ]
             },
@@ -220,51 +195,29 @@
         "for": "5m",
         "frequency": "1m",
         "handler": 1,
-        "message": "Scale down!",
-        "name": "Average CPU Usage II alert",
+        "name": "CPU Usage alert 0.20",
         "noDataState": "no_data",
         "notifications": [
           {
-            "uid": "ECpRDZfMk"
+            "uid": "buVeHZfMk"
           }
         ]
       },
-      "aliasColors": {
-        "194.182.184.206:9100": "blue",
-        "A: 194.182.184.206:9100": "blue",
-        "B: 194.182.184.206:9100": "red"
-      },
+      "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {
-            "align": null,
-            "filterable": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "custom": {}
         },
         "overrides": []
       },
-      "fill": 2,
-      "fillGradient": 10,
+      "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
-        "h": 12,
+        "h": 9,
         "w": 12,
         "x": 12,
         "y": 0
@@ -282,7 +235,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "connected",
+      "nullPointMode": "null",
       "options": {
         "alertThreshold": true
       },
@@ -298,11 +251,9 @@
       "targets": [
         {
           "expr": "sum by (instance) (rate(node_cpu_seconds_total{mode!=\"idle\"}[1m])) / sum by (instance) (rate(node_cpu_seconds_total[1m]))",
-          "format": "time_series",
-          "instant": false,
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{ instance }}",
+          "queryType": "randomWalk",
           "refId": "A"
         }
       ],
@@ -318,7 +269,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average CPU Usage II",
+      "title": "CPU Usage 0.20 alert",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -334,8 +285,7 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:212",
-          "decimals": 1,
+          "$$hashKey": "object:143",
           "format": "percentunit",
           "label": null,
           "logBase": 1,
@@ -344,7 +294,7 @@
           "show": true
         },
         {
-          "$$hashKey": "object:213",
+          "$$hashKey": "object:144",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -359,7 +309,6 @@
       }
     }
   ],
-  "refresh": false,
   "schemaVersion": 26,
   "style": "dark",
   "tags": [],
@@ -372,7 +321,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Cloud Computing Dashboard",
-  "uid": "q4HykWfMk",
-  "version": 11
+  "title": "CC Dashboard",
+  "uid": "3by-snfGz",
+  "version": 1
 }
